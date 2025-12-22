@@ -1,8 +1,8 @@
 package com.example.accountservice.infrastructure.adapters.out.messaging;
-
 import com.example.accountservice.application.port.out.EventPublisherPort;
 import com.example.accountservice.domain.model.DomainEvent;
 import com.example.accountservice.domain.model.MoneyDepositedEvent;
+import com.example.accountservice.domain.model.exception.InfrastructureException;
 import com.example.accountservice.infrastructure.adapters.out.persistance.entity.OutboxEventEntity;
 import com.example.accountservice.infrastructure.adapters.out.persistance.repository.JpaOutboxRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,10 @@ public class TransactionalOutboxAdapter implements EventPublisherPort {
                     .processed(false)
                     .build();
             outboxRepository.save(outboxEventEntity);
+            log.debug("Evento {} guardado en Outbox", event.eventType());
         }catch (Exception e) {
-            throw new RuntimeException("Error al serializar evento para Outbox", e);
+            log.error("Fallo crítico de serialización para el evento: {}", event.eventType());
+            throw new InfrastructureException("Error al procesar el evento para mensajería", e);
         }
     }
 }
