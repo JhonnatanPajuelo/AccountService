@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-public record MoneyDepositedEvent(
+public record MoneyWithdrawalEvent(
         UUID eventId,
         UUID transactionId,
         UUID userId,
         BigDecimal amount,
         Instant occurredAt
-)implements DomainEvent {
+) implements DomainEvent {
     @Override
     public String eventType() {
-        return "MONEY_DEPOSITED";
+        return "MONEY_WITHDRAWN";
     }
 
     @Override

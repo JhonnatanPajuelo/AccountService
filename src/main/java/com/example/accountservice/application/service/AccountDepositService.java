@@ -47,6 +47,7 @@ public class AccountDepositService implements DepositUseCase {
 
         // 4. Publicar el evento
         // Esto viajará a Reporting Service para actualizar el saldo
+        log.info("Publicando evento de depósito en RabbitMQ: {}", event.eventId());
         eventPublisherPort.publish(event);
         log.info("Depósito completado exitosamente. Transacción: {}", savedTransaction.transactionID());
         // 5. Retornar el ID al Controller

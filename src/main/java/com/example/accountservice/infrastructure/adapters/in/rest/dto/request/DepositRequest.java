@@ -9,7 +9,7 @@ public record DepositRequest(
         UUID userId,
 
         @NotNull(message = "El monto es obligatorio")
-        @DecimalMin(value = "0.01", message = "El monto mínimo debe ser 0.01")
+        @DecimalMin(value = "1.00", message = "El monto mínimo debe ser 1.00")
         BigDecimal amount
 ) {
     // Constructor compacto para validación extra de seguridad

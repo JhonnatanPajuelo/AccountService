@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    # Asegúrate de que el nombre de la BD 'trading_db_dev' exista en tu MySQL
+    url: jdbc:mysql://localhost:3306/trading_db_dev?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: ${DB_PASSWORD:2614} # Es buena práctica usar variables de entorno
+    driver-class-name: com.mysql.cj.jdbc.Driver # Driver actualizado
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        # Cambiamos el dialecto a MySQL 8 (o la versión que uses)
+
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: 5672
+    username: ${RABBIT_USER:user}
+    password: ${RABBIT_PASSWORD:rabit321}
+    virtual-host: develop

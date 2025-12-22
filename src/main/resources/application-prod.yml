@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: AccountService
+
+  # Configuración de Base de Datos (PostgreSQL)
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/trading_db}
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  # Configuración de JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate # En producción NUNCA uses 'update' o 'create'
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 25 # Optimiza las inserciones del Outbox
+          order_inserts: true
+
+  # Configuración de RabbitMQ
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USER:guest}
+    password: ${RABBIT_PASSWORD:guest}
+    template:
+      retry:
+        enabled: true
+        initial-interval: 1000ms
+        max-attempts: 3
+        max-interval: 10000ms
+
+# Configuración de Logs (Importante para Auditoría)
+logging:
+  level:
+    root: INFO
+    com.trading.accountservice: DEBUG # Tu lógica en debug para rastreo
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Habilitar el Programador (Scheduled) para el Outbox Relay
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics # Monitoreo con Actuator
